@@ -1,10 +1,14 @@
+import { useContext } from 'react'
 import { GetStaticProps } from 'next' // permite tipagem do método do next
+import { format, parseISO } from 'date-fns'
+
 import Image from 'next/image' // performance
 import Link from 'next/link' // evita carregamentos redundantes em novas páginas (performance)
-import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
-import { api } from '../services/api'
+
+import { PlayerContext } from '../contexts/PlayerContext'
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
+import { api } from '../services/api'
 
 import styles from './home.module.scss'
 
@@ -33,6 +37,8 @@ type HomeProps = {
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   
+  const { play } = useContext(PlayerContext)
+  
   return (
     <div className={styles.homePage}>
 
@@ -60,7 +66,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={ () => play(episode) }>
                   <img src="/play-green.svg" alt="Tocar episódio"/>
                 </button>
 
@@ -163,6 +169,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 // aula1: #missaoespacial
 // aula2: #embuscadoproximonivel
+// aula2: #astronautas
 
 // json-server: api fake para testes (-w: watch / -d: delay / -p: porta)
 
